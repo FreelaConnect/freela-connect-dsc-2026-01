@@ -1,0 +1,16 @@
+services:
+  postgres:
+      image: postgres:16
+      container_name: freelaconnect-postgres
+      restart: unless-stopped
+      environment:
+        POSTGRES_USER: freelaconnect
+        POSTGRES_PASSWORD: freelaconnect
+        POSTGRES_DB: freelaconnect
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres-data:/var/lib/postgresql/data
+        
+volumes:
+  postgres-data:
