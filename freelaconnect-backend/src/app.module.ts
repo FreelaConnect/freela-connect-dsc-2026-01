@@ -5,6 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContractEntity } from './modules/contract/entities/contract.entities';
 import { PaymentEntity } from './modules/payments/entities/payment.entity';
+import { Project } from './modules/project/entities/project.entities';
+import { ProposalEntity } from './modules/proposals/entities/proposal.entity';
+import { ProposalsModule } from './modules/proposals/proposals.module';
 
 @Module({
   controllers: [AppController],
@@ -20,9 +23,10 @@ import { PaymentEntity } from './modules/payments/entities/payment.entity';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         synchronize: true,
-        entities: [ContractEntity, PaymentEntity],
+        entities: [ContractEntity, PaymentEntity, ProposalEntity, Project], // <- Adicione Project e ProposalEntity aqui
       }),
     }),
+    ProposalsModule, // <- Adicione o módulo aqui
   ],
 
 })
