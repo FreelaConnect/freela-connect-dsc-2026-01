@@ -7,6 +7,9 @@ import { ContractEntity } from './modules/contract/entities/contract.entities';
 import { PaymentEntity } from './modules/payments/entities/payment.entity';
 import { ProposalEntity } from './modules/proposals/proposal.entity';
 import { ProposalModule } from './modules/proposals/proposal.module';
+import { UserEntity } from './modules/users/entities/user.entity';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   controllers: [AppController],
@@ -23,11 +26,13 @@ import { ProposalModule } from './modules/proposals/proposal.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         synchronize: true,
-        entities: [ContractEntity, PaymentEntity, ProposalEntity],
+        entities: [ContractEntity, PaymentEntity, ProposalEntity, UserEntity],
         logging: ['error', 'warn'],
       }),
     }),
     ProposalModule,
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
