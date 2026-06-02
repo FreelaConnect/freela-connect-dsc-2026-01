@@ -7,6 +7,7 @@ import { ContractEntity } from './modules/contract/entities/contract.entities';
 import { PaymentEntity } from './modules/payments/entities/payment.entity';
 import { ProposalEntity } from './modules/proposals/proposal.entity';
 import { ProposalModule } from './modules/proposals/proposal.module';
+import { ContractsModule } from './modules/contract/contracts.module';
 import { UserEntity } from './modules/users/entities/user.entity';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -31,6 +32,7 @@ import { AuthModule } from './modules/auth/auth.module';
       }),
     }),
     ProposalModule,
+    ContractsModule,
     UsersModule,
     AuthModule,
   ],

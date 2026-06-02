@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 
 export class ContractNotFoundException extends NotFoundException {
-    constructor(contractId: string) {
+    constructor(contractId: number) {
         super(`Contract with ID ${contractId} not found`);
     }
 }

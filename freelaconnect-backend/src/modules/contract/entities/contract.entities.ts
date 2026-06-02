@@ -1,11 +1,11 @@
-import { PaymentStatusEnum } from "src/common/enums/payment-status.enuns";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { PaymentStatusEnum } from "../../../common/enums/payment-status.enuns";
+import { Column, CreateDateColumn, UpdateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('contracts')
 
 export class ContractEntity {
-    @PrimaryGeneratedColumn('uuid', { name: 'contract_id' })
-    contractId!: string;
+    @PrimaryGeneratedColumn({ name: 'contract_id' })
+    contractId!: number;
 
     @Column({ name: 'freelancer_id' })
     freelancerId!: string;
@@ -23,13 +23,16 @@ export class ContractEntity {
     })
     status: PaymentStatusEnum = PaymentStatusEnum.PENDING;
 
+    @Column({ name: 'version', type: 'int', default: 1 })
+    version: number = 1;
+
     @CreateDateColumn({ name: 'created_at' })
     createdAt!: Date;
 
-    @CreateDateColumn({ name: 'updated_at' })
+    @UpdateDateColumn({ name: 'updated_at' })
     updatedAt!: Date;
 
-    @CreateDateColumn({ name: 'deleted_at', nullable: true })
+    @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
     deletedAt: Date | null = null;
 
     constructor() {}

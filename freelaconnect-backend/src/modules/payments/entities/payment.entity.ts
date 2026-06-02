@@ -1,5 +1,5 @@
-import { PaymentStatusEnum } from "src/common/enums/payment-status.enuns";
-import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { PaymentStatusEnum } from "../../../common/enums/payment-status.enuns";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("payments")
 export class PaymentEntity {
@@ -22,10 +22,13 @@ export class PaymentEntity {
     @Column({name: "paid_at", type: "timestamp", nullable: true})
     paidAt: Date | null = null;
 
-    @Column({name: "created_at"})
+    @Column({ name: 'version', type: 'int', default: 1 })
+    version: number = 1;
+
+    @CreateDateColumn({ name: "created_at" })
     createdAt!: Date;
     
-    @Column({name: "updated_at"})
+    @UpdateDateColumn({ name: "updated_at" })
     updatedAt!: Date;
 
     @DeleteDateColumn({ name: "deleted_at", nullable: true })
