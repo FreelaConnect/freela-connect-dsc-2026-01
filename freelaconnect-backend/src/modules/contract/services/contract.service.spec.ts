@@ -13,6 +13,7 @@ describe('ContractService', () => {
     beforeEach(async () => {
         const contractRepositoryMock: ContractRepository = {
             findById: jest.fn(),
+            findAll: jest.fn(),
             save: jest.fn(),
         };
 

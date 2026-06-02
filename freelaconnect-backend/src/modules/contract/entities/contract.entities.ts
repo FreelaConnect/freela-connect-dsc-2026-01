@@ -1,79 +1,39 @@
-import { PaymentStatusEnum } from "src/common/enums/payment-status.enuns";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { PaymentStatusEnum } from "../../../common/enums/payment-status.enuns";
+import { Column, CreateDateColumn, UpdateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('contracts')
 
 export class ContractEntity {
-    @PrimaryGeneratedColumn('uuid', { name: 'contract_id' })
-    contractId: string;
+    @PrimaryGeneratedColumn({ name: 'contract_id' })
+    contractId!: number;
 
     @Column({ name: 'freelancer_id' })
-    freelancerId: string;
+    freelancerId!: string;
 
     @Column({ name: 'order_id' })
-    orderId: string;
+    orderId!: string;
 
     @Column({ name: 'project_id' })
-    projectId: string;
+    projectId!: string;
 
-        @Column({ 
+    @Column({ 
         type: 'enum',
         enum: PaymentStatusEnum,
         default: PaymentStatusEnum.PENDING,
     })
-    status: PaymentStatusEnum;
+    status: PaymentStatusEnum = PaymentStatusEnum.PENDING;
 
-    @CreateDateColumn({ name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
-    createdAt: Date;
+    @Column({ name: 'version', type: 'int', default: 1 })
+    version: number = 1;
 
-    @CreateDateColumn({ name: 'updated_at', default: () => 'CURRENT_TIMESTAMP' })
-    updatedAt: Date;
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt!: Date;
 
-    @CreateDateColumn({ name: 'deleted_at', nullable: true })
-    deletedAt: Date | null;
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt!: Date;
 
+    @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
+    deletedAt: Date | null = null;
 
-    constructor (
-        contractId: string,
-        orderId: string,
-        freelancerId: string,
-        status: PaymentStatusEnum,
-        projectId: string,
-        updatedAt: Date,
-        createdAt: Date,
-        deletedAt: Date | null,
-    ) {
-        if (!contractId) {
-            throw new Error('Contract ID is required');   }
-
-        if (!orderId) {
-            throw new Error('Order ID is required');   }
-
-        if (!freelancerId) {
-            throw new Error('Freelancer ID is required');   }
-
-        if (!projectId) {
-            throw new Error('Project ID is required');   }
-
-        if (!status) {
-            throw new Error('Status is required');   }
-
-        if (!updatedAt) {
-            throw new Error('Updated At is required');   }
-
-        if  (!createdAt) {
-            throw new Error('Created At is required');   }
-
-        this.contractId = contractId;
-        this.orderId = orderId;
-        this.freelancerId = freelancerId;
-        this.projectId = projectId;
-        this.status = status;
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-        this.deletedAt = deletedAt;
-        
-
-    }
-    
+    constructor() {}
 }
