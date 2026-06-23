@@ -5,11 +5,12 @@ on:
     branches:
       - main
       - develop
-      - radames/proposal-status
+      - feature/radames-proposal-status
   pull_request:
     branches:
       - main
       - develop
+      - feauture/radames-proposal-status
 
 jobs:
   frontend:
