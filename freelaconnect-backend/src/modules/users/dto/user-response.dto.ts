@@ -1,15 +1,25 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { UserRole } from '../enums/user-role.enum';
 import { UserStatus } from '../enums/user-status.enum';
 
 export class UserResponseDto {
+  @ApiProperty({ example: 1 })
   userId: number;
+  @ApiProperty({ example: 'Ana Souza' })
   name: string;
+  @ApiProperty({ example: 'ana.souza@example.com' })
   email: string;
+  @ApiProperty({ enum: UserRole, example: UserRole.USER })
   role: UserRole;
+  @ApiProperty({ enum: UserStatus, example: UserStatus.ACTIVE })
   status: UserStatus;
+  @ApiProperty({ example: 1 })
   version: number;
+  @ApiProperty({ example: '2026-06-09T12:00:00.000Z' })
   createdAt: Date;
+  @ApiProperty({ example: '2026-06-09T12:00:00.000Z' })
   updatedAt: Date;
+  @ApiProperty({ example: null, nullable: true, type: String })
   deletedAt: Date | null;
 
   constructor(data: {

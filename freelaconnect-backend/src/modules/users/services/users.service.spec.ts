@@ -31,6 +31,7 @@ describe('UsersService', () => {
     repository = {
       findById: jest.fn(),
       findByEmail: jest.fn(),
+      findByPasswordResetTokenHash: jest.fn(),
       findAll: jest.fn(),
       save: jest.fn(),
       update: jest.fn(),

@@ -22,12 +22,18 @@ export class UserEntity {
   @Column({ name: 'password_hash' })
   passwordHash!: string;
 
+  @Column({ name: 'password_reset_token_hash', nullable: true })
+  passwordResetTokenHash: string | null = null;
+
+  @Column({ name: 'password_reset_token_expires_at', type: 'timestamp', nullable: true })
+  passwordResetTokenExpiresAt: Date | null = null;
+
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.CLIENT,
+    default: UserRole.USER,
   })
-  role: UserRole = UserRole.CLIENT;
+  role: UserRole = UserRole.USER;
 
   @Column({
     type: 'enum',

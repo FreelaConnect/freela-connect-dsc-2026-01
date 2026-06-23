@@ -11,6 +11,7 @@ import { ContractsModule } from './modules/contract/contracts.module';
 import { UserEntity } from './modules/users/entities/user.entity';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { PaymentModule } from './modules/payments/payment.module';
 
 @Module({
   controllers: [AppController],
@@ -28,11 +29,13 @@ import { AuthModule } from './modules/auth/auth.module';
         database: configService.get<string>('DB_DATABASE'),
         synchronize: true,
         entities: [ContractEntity, PaymentEntity, ProposalEntity, UserEntity],
-        logging: ['error', 'warn'],
+        logging: configService.get<string>('NODE_ENV') === 'test' ? false : ['error', 'warn'],
+        retryAttempts: configService.get<string>('NODE_ENV') === 'test' ? 0 : 10,
       }),
     }),
     ProposalModule,
     ContractsModule,
+    PaymentModule,
     UsersModule,
     AuthModule,
   ],

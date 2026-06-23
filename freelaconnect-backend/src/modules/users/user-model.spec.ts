@@ -9,15 +9,16 @@ import { UserStatus } from './enums/user-status.enum';
 
 describe('User model contracts', () => {
   it('defines the supported user roles', () => {
+    expect(UserRole.USER).toBe('user');
     expect(UserRole.ADMIN).toBe('ADMIN');
     expect(UserRole.CLIENT).toBe('CLIENT');
     expect(UserRole.FREELANCER).toBe('FREELANCER');
   });
 
-  it('creates users with active status, client role and version one by default', () => {
+  it('creates users with active status, user role and version one by default', () => {
     const user = new UserEntity();
 
-    expect(user.role).toBe(UserRole.CLIENT);
+    expect(user.role).toBe(UserRole.USER);
     expect(user.status).toBe(UserStatus.ACTIVE);
     expect(user.version).toBe(1);
     expect(user.deletedAt).toBeNull();

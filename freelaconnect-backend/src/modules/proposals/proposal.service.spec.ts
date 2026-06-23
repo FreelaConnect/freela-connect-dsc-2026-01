@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProposalService } from '../proposal.service';
-import { ProposalRepository, PROPOSAL_REPOSITORY } from '../proposal.repository';
-import { ProposalEntity } from '../proposal.entity';
+import { ProposalService } from './proposal.service';
+import { ProposalRepository, PROPOSAL_REPOSITORY } from './proposal.repository';
+import { ProposalEntity } from './proposal.entity';
 import { ProposalStatus } from '../../common/enums/proposal-status.enum';
-import { CreateProposalDto } from '../create-proposal.dto';
+import { CreateProposalDto } from './create-proposal.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('ProposalService', () => {

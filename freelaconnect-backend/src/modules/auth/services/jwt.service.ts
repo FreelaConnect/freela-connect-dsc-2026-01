@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Optional, UnauthorizedException } from '@nestjs/common';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { UserRole } from '../../users/enums/user-role.enum';
 
@@ -11,10 +11,16 @@ export type JwtPayload = {
 
 @Injectable()
 export class JwtService {
+  private readonly secret: string;
+  private readonly expiresInSeconds: number;
+
   constructor(
-    private readonly secret: string = process.env.JWT_SECRET || 'freelaconnect-dev-secret',
-    private readonly expiresInSeconds: number = Number(process.env.JWT_EXPIRES_IN_SECONDS || 3600),
-  ) {}
+    @Optional() @Inject('JWT_SECRET') secret?: string,
+    @Optional() @Inject('JWT_EXPIRES_IN_SECONDS') expiresInSeconds?: number,
+  ) {
+    this.secret = secret || process.env.JWT_SECRET || 'freelaconnect-dev-secret';
+    this.expiresInSeconds = expiresInSeconds ?? Number(process.env.JWT_EXPIRES_IN_SECONDS || 3600);
+  }
 
   sign(payload: Omit<JwtPayload, 'exp'>): string {
     const header = this.encode({ alg: 'HS256', typ: 'JWT' });

@@ -24,6 +24,12 @@ export class UserTypeOrmRepository implements UsersRepository {
     });
   }
 
+  async findByPasswordResetTokenHash(passwordResetTokenHash: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne({
+      where: { passwordResetTokenHash, deletedAt: IsNull() },
+    });
+  }
+
   async findAll(
     page: number = 1,
     limit: number = 10,

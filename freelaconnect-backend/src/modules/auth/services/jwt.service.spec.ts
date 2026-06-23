@@ -3,6 +3,7 @@ import { UserRole } from '../../users/enums/user-role.enum';
 
 describe('JwtService', () => {
   let service: JwtService;
+  const demoEmail = 'demo-auth@example.com';
 
   beforeEach(() => {
     service = new JwtService('test-secret', 3600);
@@ -11,13 +12,13 @@ describe('JwtService', () => {
   it('signs and verifies access tokens', () => {
     const token = service.sign({
       sub: 1,
-      email: 'admin@example.com',
+      email: demoEmail,
       role: UserRole.ADMIN,
     });
 
     expect(service.verify(token)).toMatchObject({
       sub: 1,
-      email: 'admin@example.com',
+      email: demoEmail,
       role: UserRole.ADMIN,
     });
   });

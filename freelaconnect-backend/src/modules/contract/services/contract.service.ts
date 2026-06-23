@@ -9,6 +9,7 @@ import { ReplaceContractDto } from '../dto/replace-contract.dto';
 import { ContractNotFoundException } from '../../../common/exceptions/contract-not-found.exception';
 import { ContractEntity } from '../entities/contract.entities';
 import { PaymentStatusEnum } from '../../../common/enums/payment-status.enuns';
+import { ContractStatusEnum } from '../../../common/enums/contract_status.enum';
 
 @Injectable()
 export class ContractService {
@@ -23,7 +24,11 @@ export class ContractService {
             throw new ContractNotFoundException(contractId);
         }
 
-        throw new Error('Method not implemented.');
+        await this.contractRepository.update(contractId, {
+            status: PaymentStatusEnum.APPROVED,
+            version: contract.version,
+        });
+        return new ConfirmContractResponseDto(String(contractId), ContractStatusEnum.APPROVED);
     }
 
     async getById(contractId: number): Promise<ContractResponseDto> {

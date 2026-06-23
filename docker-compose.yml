@@ -1,0 +1,110 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: freelaconnect-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: freelaconnect
+      POSTGRES_PASSWORD: freelaconnect
+      POSTGRES_DB: freelaconnect
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U freelaconnect"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - freelaconnect-network
+
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: freelaconnect-postgres-test
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: freelaconnect
+      POSTGRES_PASSWORD: freelaconnect
+      POSTGRES_DB: freelaconnect_test
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U freelaconnect -d freelaconnect_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - freelaconnect-network
+
+  frontend:
+    build:
+      context: ./freelaconnect-frontend
+      dockerfile: Dockerfile
+    container_name: freelaconnect-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      VITE_API_URL: http://localhost:3002
+    develop:
+      watch:
+        - action: sync
+          path: ./freelaconnect-frontend
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+        - action: rebuild
+          path: ./freelaconnect-frontend/package.json
+        - action: rebuild
+          path: ./freelaconnect-frontend/package-lock.json
+    networks:
+      - freelaconnect-network
+
+  backend:
+    build:
+      context: ./freelaconnect-backend
+      dockerfile: Dockerfile.dev
+    container_name: freelaconnect-backend
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: freelaconnect
+      DB_PASSWORD: freelaconnect
+      DB_DATABASE: freelaconnect
+      CHOKIDAR_USEPOLLING: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./freelaconnect-backend
+          target: /app
+          ignore:
+            - node_modules/
+            - dist/
+            - coverage/
+        - action: rebuild
+          path: ./freelaconnect-backend/package.json
+        - action: rebuild
+          path: ./freelaconnect-backend/pnpm-lock.yaml
+    networks:
+      - freelaconnect-network
+
+volumes:
+  postgres-data:
+  postgres-test-data:
+
+networks:
+  freelaconnect-network:
+    driver: bridge

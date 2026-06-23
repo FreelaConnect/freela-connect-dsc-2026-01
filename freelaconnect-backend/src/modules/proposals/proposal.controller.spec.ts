@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
-import { ProposalController } from '../proposal.controller';
-import { ProposalService } from '../proposal.service';
+import request from 'supertest';
+import { ProposalController } from './proposal.controller';
+import { ProposalService } from './proposal.service';
 import { ProposalStatus } from '../../common/enums/proposal-status.enum';
 
 describe('ProposalController (Integration Tests)', () => {

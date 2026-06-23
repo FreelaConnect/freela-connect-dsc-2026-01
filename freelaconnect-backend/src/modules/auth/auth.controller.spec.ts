@@ -4,13 +4,16 @@ import { UserRole } from '../users/enums/user-role.enum';
 import { UserStatus } from '../users/enums/user-status.enum';
 
 describe('AuthController', () => {
+  const demoEmail = 'demo-auth@example.com';
+  const demoPassword = 'password123';
+
   it('logs users in', async () => {
     const response = {
       accessToken: 'token',
       user: {
         userId: 1,
         name: 'Ana Admin',
-        email: 'admin@example.com',
+        email: demoEmail,
         role: UserRole.ADMIN,
         status: UserStatus.ACTIVE,
         version: 1,
@@ -25,15 +28,46 @@ describe('AuthController', () => {
     const controller = new AuthController(authService);
 
     await expect(
-      controller.login({ email: 'admin@example.com', password: 'password123' }),
+      controller.login({ email: demoEmail, password: demoPassword }),
     ).resolves.toBe(response);
   });
 
-  it('returns the current authenticated user', () => {
-    const authService = { login: jest.fn() } as unknown as AuthService;
+  it('returns the current authenticated user', async () => {
+    const response = {
+      userId: 1,
+      name: 'Ana Admin',
+      email: demoEmail,
+      role: UserRole.ADMIN,
+      status: UserStatus.ACTIVE,
+      version: 1,
+      createdAt: new Date('2026-06-01T00:00:00.000Z'),
+      updatedAt: new Date('2026-06-01T00:00:00.000Z'),
+      deletedAt: null,
+    };
+    const authService = {
+      login: jest.fn(),
+      getCurrentUser: jest.fn().mockResolvedValue(response),
+    } as unknown as jest.Mocked<AuthService>;
     const controller = new AuthController(authService);
-    const currentUser = { userId: 1, email: 'admin@example.com', role: UserRole.ADMIN };
+    const currentUser = { userId: 1, email: demoEmail, role: UserRole.ADMIN };
 
-    expect(controller.getMe(currentUser)).toBe(currentUser);
+    await expect(controller.getMe(currentUser)).resolves.toBe(response);
+    expect(authService.getCurrentUser).toHaveBeenCalledWith(1);
+  });
+
+  it('requests password recovery instructions', async () => {
+    const response = {
+      message:
+        'Se o e-mail estiver cadastrado, enviaremos as instrucoes de recuperacao.',
+    };
+    const authService = {
+      login: jest.fn(),
+      forgotPassword: jest.fn().mockResolvedValue(response),
+    } as unknown as jest.Mocked<AuthService>;
+    const controller = new AuthController(authService);
+
+    await expect(
+      controller.forgotPassword({ email: demoEmail }),
+    ).resolves.toBe(response);
   });
 });
