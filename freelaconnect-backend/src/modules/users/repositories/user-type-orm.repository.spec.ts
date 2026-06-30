@@ -93,9 +93,9 @@ describe('UserTypeOrmRepository', () => {
       .mockResolvedValueOnce(updatedUser);
     typeOrmRepository.update.mockResolvedValue({ affected: 1 } as any);
 
-    await expect(repository.update(1, { name: 'Ana Atualizada', version: 1 })).resolves.toBe(
-      updatedUser,
-    );
+    await expect(
+      repository.update(1, { name: 'Ana Atualizada', version: 1 }),
+    ).resolves.toBe(updatedUser);
     expect(typeOrmRepository.update).toHaveBeenCalledWith(
       { userId: 1 },
       expect.objectContaining({ name: 'Ana Atualizada', version: 2 }),
@@ -106,9 +106,9 @@ describe('UserTypeOrmRepository', () => {
     const user = createUser({ version: 2 });
     typeOrmRepository.findOne.mockResolvedValue(user);
 
-    await expect(repository.update(1, { name: 'Ana', version: 1 })).rejects.toThrow(
-      UserVersionConflictException,
-    );
+    await expect(
+      repository.update(1, { name: 'Ana', version: 1 }),
+    ).rejects.toThrow(UserVersionConflictException);
     expect(typeOrmRepository.update).not.toHaveBeenCalled();
   });
 

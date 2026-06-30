@@ -9,7 +9,10 @@ export interface ProposalRepository {
   ): Promise<ProposalEntity | null>;
   findByProjectId(projectId: string): Promise<ProposalEntity[]>;
   findByFreelancerId(freelancerId: string): Promise<ProposalEntity[]>;
-  update(proposalId: string, proposal: Partial<ProposalEntity>): Promise<ProposalEntity>;
+  update(
+    proposalId: string,
+    proposal: Partial<ProposalEntity>,
+  ): Promise<ProposalEntity>;
   delete(proposalId: string): Promise<void>;
 }
 

@@ -30,15 +30,21 @@ describe('Contracts/Payments integration', () => {
   });
 
   it('ContractService cria, lista, busca, atualiza e remove', async () => {
-    const created = await contractService.createContract(buildContractPayload());
+    const created = await contractService.createContract(
+      buildContractPayload(),
+    );
 
-    await expect(contractService.getAllContracts(1, 10)).resolves.toMatchObject({
-      page: 1,
-      limit: 10,
-      total: 1,
-      data: [expect.objectContaining({ contractId: created.contractId })],
-    });
-    await expect(contractService.getById(created.contractId)).resolves.toMatchObject({
+    await expect(contractService.getAllContracts(1, 10)).resolves.toMatchObject(
+      {
+        page: 1,
+        limit: 10,
+        total: 1,
+        data: [expect.objectContaining({ contractId: created.contractId })],
+      },
+    );
+    await expect(
+      contractService.getById(created.contractId),
+    ).resolves.toMatchObject({
       contractId: created.contractId,
     });
 
@@ -51,7 +57,9 @@ describe('Contracts/Payments integration', () => {
       version: created.version + 1,
     });
 
-    const replacePayload = buildContractPayload({ status: PaymentStatusEnum.REJECTED });
+    const replacePayload = buildContractPayload({
+      status: PaymentStatusEnum.REJECTED,
+    });
     const replaced = await contractService.replaceContract(created.contractId, {
       freelancerId: replacePayload.freelancerId,
       orderId: replacePayload.orderId,
@@ -72,7 +80,9 @@ describe('Contracts/Payments integration', () => {
   });
 
   it('ContractService valida conflitos de versao', async () => {
-    const created = await contractService.createContract(buildContractPayload());
+    const created = await contractService.createContract(
+      buildContractPayload(),
+    );
 
     await expect(
       contractService.updateContract(created.contractId, {
@@ -83,9 +93,13 @@ describe('Contracts/Payments integration', () => {
   });
 
   it('ContractService confirma contrato', async () => {
-    const created = await contractService.createContract(buildContractPayload());
+    const created = await contractService.createContract(
+      buildContractPayload(),
+    );
 
-    await expect(contractService.confirmContract(created.contractId)).resolves.toMatchObject({
+    await expect(
+      contractService.confirmContract(created.contractId),
+    ).resolves.toMatchObject({
       id: String(created.contractId),
       status: PaymentStatusEnum.APPROVED,
     });
@@ -100,7 +114,9 @@ describe('Contracts/Payments integration', () => {
       total: 1,
       data: [expect.objectContaining({ paymentId: created.paymentId })],
     });
-    await expect(paymentService.getById(created.paymentId)).resolves.toMatchObject({
+    await expect(
+      paymentService.getById(created.paymentId),
+    ).resolves.toMatchObject({
       paymentId: created.paymentId,
     });
 
@@ -114,7 +130,10 @@ describe('Contracts/Payments integration', () => {
     });
 
     const replaced = await paymentService.replacePayment(created.paymentId, {
-      ...buildPaymentPayload({ amount: 1800, status: PaymentStatusEnum.REJECTED }),
+      ...buildPaymentPayload({
+        amount: 1800,
+        status: PaymentStatusEnum.REJECTED,
+      }),
       version: updated.version,
     });
     expect(replaced).toMatchObject({
@@ -123,7 +142,9 @@ describe('Contracts/Payments integration', () => {
     });
     expect(Number(replaced.amount)).toBe(1800);
 
-    await expect(paymentService.deletePayment(created.paymentId, replaced.version)).resolves.toEqual({
+    await expect(
+      paymentService.deletePayment(created.paymentId, replaced.version),
+    ).resolves.toEqual({
       message: `Pagamento ${created.paymentId} deletado com sucesso`,
     });
   });

@@ -28,14 +28,19 @@ describe('UsersController (e2e)', () => {
 
   async function createUser(overrides = {}) {
     const payload = buildUserPayload(overrides);
-    const response = await request(app.getHttpServer()).post('/users').send(payload).expect(201);
+    const response = await request(app.getHttpServer())
+      .post('/users')
+      .send(payload)
+      .expect(201);
     return response.body;
   }
 
   it('GET /users retorna objeto paginado', async () => {
     await createUser();
 
-    const response = await request(app.getHttpServer()).get('/users').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/users')
+      .expect(200);
 
     expect(response.body).toMatchObject({
       data: expect.any(Array),
@@ -47,9 +52,18 @@ describe('UsersController (e2e)', () => {
   });
 
   it('GET /users?page=1&limit=5 respeita paginacao', async () => {
-    await Promise.all([createUser(), createUser(), createUser(), createUser(), createUser(), createUser()]);
+    await Promise.all([
+      createUser(),
+      createUser(),
+      createUser(),
+      createUser(),
+      createUser(),
+      createUser(),
+    ]);
 
-    const response = await request(app.getHttpServer()).get('/users?page=1&limit=5').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/users?page=1&limit=5')
+      .expect(200);
 
     expect(response.body.page).toBe(1);
     expect(response.body.limit).toBe(5);
@@ -60,7 +74,9 @@ describe('UsersController (e2e)', () => {
   it('GET /users/:id retorna usuario existente', async () => {
     const user = await createUser();
 
-    const response = await request(app.getHttpServer()).get(`/users/${user.userId}`).expect(200);
+    const response = await request(app.getHttpServer())
+      .get(`/users/${user.userId}`)
+      .expect(200);
 
     expect(response.body).toMatchObject({
       userId: user.userId,

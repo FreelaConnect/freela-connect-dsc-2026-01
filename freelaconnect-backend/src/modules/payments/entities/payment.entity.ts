@@ -1,38 +1,45 @@
-import { PaymentStatusEnum } from "../../../common/enums/payment-status.enuns";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { PaymentStatusEnum } from '../../../common/enums/payment-status.enuns';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity("payments")
+@Entity('payments')
 export class PaymentEntity {
-    @PrimaryGeneratedColumn("uuid", {name: "payment_id"})
-    paymentId!: string;
-    
-    @Column({name: "ordem_id"})
-    ordemId!: string;
+  @PrimaryGeneratedColumn('uuid', { name: 'payment_id' })
+  paymentId!: string;
 
-    @Column({
-        type: "enum", 
-        enum: PaymentStatusEnum, 
-        default: PaymentStatusEnum.PENDING
-    })
-    status: PaymentStatusEnum = PaymentStatusEnum.PENDING;
+  @Column({ name: 'ordem_id' })
+  ordemId!: string;
 
-    @Column({type: "numeric", precision: 10, scale: 2})
-    amount!: number;
-    
-    @Column({name: "paid_at", type: "timestamp", nullable: true})
-    paidAt: Date | null = null;
+  @Column({
+    type: 'enum',
+    enum: PaymentStatusEnum,
+    default: PaymentStatusEnum.PENDING,
+  })
+  status: PaymentStatusEnum = PaymentStatusEnum.PENDING;
 
-    @Column({ name: 'version', type: 'int', default: 1 })
-    version: number = 1;
+  @Column({ type: 'numeric', precision: 10, scale: 2 })
+  amount!: number;
 
-    @CreateDateColumn({ name: "created_at" })
-    createdAt!: Date;
-    
-    @UpdateDateColumn({ name: "updated_at" })
-    updatedAt!: Date;
+  @Column({ name: 'paid_at', type: 'timestamp', nullable: true })
+  paidAt: Date | null = null;
 
-    @DeleteDateColumn({ name: "deleted_at", nullable: true })
-    deletedAt: Date | null = null;
+  @Column({ name: 'version', type: 'int', default: 1 })
+  version: number = 1;
 
-    constructor() {}
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt!: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date | null = null;
+
+  constructor() {}
 }

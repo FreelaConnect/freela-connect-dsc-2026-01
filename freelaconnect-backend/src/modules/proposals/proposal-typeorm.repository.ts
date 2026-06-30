@@ -42,7 +42,10 @@ export class ProposalTypeOrmRepository implements ProposalRepository {
     });
   }
 
-  async update(proposalId: string, proposal: Partial<ProposalEntity>): Promise<ProposalEntity> {
+  async update(
+    proposalId: string,
+    proposal: Partial<ProposalEntity>,
+  ): Promise<ProposalEntity> {
     await this.repository.update(proposalId, proposal);
     const updated = await this.repository.findOne({
       where: { proposalId },

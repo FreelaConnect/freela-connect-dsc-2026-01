@@ -28,7 +28,10 @@ describe('Auth and Users (e2e)', () => {
   it('POST /users cria usuario com 201', async () => {
     const payload = buildUserPayload();
 
-    const response = await request(app.getHttpServer()).post('/users').send(payload).expect(201);
+    const response = await request(app.getHttpServer())
+      .post('/users')
+      .send(payload)
+      .expect(201);
 
     expect(response.body).toMatchObject({
       name: payload.name,
@@ -49,7 +52,10 @@ describe('Auth and Users (e2e)', () => {
 
   it('POST /auth/login retorna 200 e accessToken', async () => {
     const credentials = buildUserPayload();
-    await request(app.getHttpServer()).post('/users').send(credentials).expect(201);
+    await request(app.getHttpServer())
+      .post('/users')
+      .send(credentials)
+      .expect(201);
 
     const response = await request(app.getHttpServer())
       .post('/auth/login')
@@ -63,7 +69,10 @@ describe('Auth and Users (e2e)', () => {
 
   it('POST /auth/login rejeita senha errada com 401', async () => {
     const credentials = buildUserPayload();
-    await request(app.getHttpServer()).post('/users').send(credentials).expect(201);
+    await request(app.getHttpServer())
+      .post('/users')
+      .send(credentials)
+      .expect(201);
 
     await request(app.getHttpServer())
       .post('/auth/login')

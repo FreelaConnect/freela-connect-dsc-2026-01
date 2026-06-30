@@ -66,8 +66,8 @@ describe('AuthController', () => {
     } as unknown as jest.Mocked<AuthService>;
     const controller = new AuthController(authService);
 
-    await expect(
-      controller.forgotPassword({ email: demoEmail }),
-    ).resolves.toBe(response);
+    await expect(controller.forgotPassword({ email: demoEmail })).resolves.toBe(
+      response,
+    );
   });
 });

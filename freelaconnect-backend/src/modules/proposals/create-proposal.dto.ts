@@ -12,7 +12,9 @@ export class CreateProposalDto {
   @IsString()
   freelancerId!: string;
 
-  @ApiProperty({ example: 'Tenho experiencia com NestJS e posso entregar em duas semanas.' })
+  @ApiProperty({
+    example: 'Tenho experiencia com NestJS e posso entregar em duas semanas.',
+  })
   @IsNotEmpty()
   @IsString()
   coverLetter!: string;

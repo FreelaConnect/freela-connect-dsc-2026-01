@@ -1,5 +1,20 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards, ValidationPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -18,10 +33,15 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ summary: 'Autentica um usuario e retorna um token JWT' })
-  @ApiOkResponse({ description: 'Login realizado com sucesso.', type: AuthResponseDto })
+  @ApiOkResponse({
+    description: 'Login realizado com sucesso.',
+    type: AuthResponseDto,
+  })
   @ApiUnauthorizedResponse({ description: 'Credenciais invalidas.' })
   @HttpCode(HttpStatus.OK)
-  async login(@Body(ValidationPipe) loginDto: LoginDto): Promise<AuthResponseDto> {
+  async login(
+    @Body(ValidationPipe) loginDto: LoginDto,
+  ): Promise<AuthResponseDto> {
     return this.authService.login(loginDto);
   }
 
@@ -32,7 +52,9 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Token ausente ou invalido.' })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  getMe(@CurrentUser() currentUser: AuthenticatedUser): Promise<UserResponseDto> {
+  getMe(
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ): Promise<UserResponseDto> {
     return this.authService.getCurrentUser(currentUser.userId);
   }
 

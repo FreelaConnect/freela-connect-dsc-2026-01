@@ -60,7 +60,9 @@ describe('ProposalService', () => {
         updatedAt: new Date(),
       };
 
-      (mockRepository.findByProjectAndFreelancer as jest.Mock).mockResolvedValue(null);
+      (
+        mockRepository.findByProjectAndFreelancer as jest.Mock
+      ).mockResolvedValue(null);
       (mockRepository.create as jest.Mock).mockResolvedValue(createdProposal);
 
       const result = await service.submitProposal(createProposalDto);
@@ -91,9 +93,9 @@ describe('ProposalService', () => {
         updatedAt: new Date(),
       };
 
-      (mockRepository.findByProjectAndFreelancer as jest.Mock).mockResolvedValue(
-        existingProposal,
-      );
+      (
+        mockRepository.findByProjectAndFreelancer as jest.Mock
+      ).mockResolvedValue(existingProposal);
 
       await expect(service.submitProposal(createProposalDto)).rejects.toThrow(
         BadRequestException,
@@ -187,13 +189,17 @@ describe('ProposalService', () => {
         },
       ];
 
-      (mockRepository.findByProjectId as jest.Mock).mockResolvedValue(proposals);
+      (mockRepository.findByProjectId as jest.Mock).mockResolvedValue(
+        proposals,
+      );
 
       const result = await service.getProposalsByProjectId('project-123');
 
       expect(result).toHaveLength(2);
       expect(result[0].proposalId).toBe('proposal-1');
-      expect(mockRepository.findByProjectId).toHaveBeenCalledWith('project-123');
+      expect(mockRepository.findByProjectId).toHaveBeenCalledWith(
+        'project-123',
+      );
     });
   });
 });

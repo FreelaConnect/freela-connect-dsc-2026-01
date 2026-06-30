@@ -27,14 +27,20 @@ describe('PaymentsController (e2e)', () => {
 
   async function createPayment(overrides = {}) {
     const payload = buildPaymentPayload(overrides);
-    const response = await request(app.getHttpServer()).post('/payments').send(payload).expect(201);
+    const response = await request(app.getHttpServer())
+      .post('/payments')
+      .send(payload)
+      .expect(201);
     return response.body;
   }
 
   it('POST /payments cria pagamento', async () => {
     const payload = buildPaymentPayload();
 
-    const response = await request(app.getHttpServer()).post('/payments').send(payload).expect(201);
+    const response = await request(app.getHttpServer())
+      .post('/payments')
+      .send(payload)
+      .expect(201);
 
     expect(response.body).toMatchObject({
       ordemId: payload.ordemId,
@@ -47,7 +53,9 @@ describe('PaymentsController (e2e)', () => {
   it('GET /payments lista pagamentos', async () => {
     await createPayment();
 
-    const response = await request(app.getHttpServer()).get('/payments').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/payments')
+      .expect(200);
 
     expect(response.body).toMatchObject({
       data: expect.any(Array),
@@ -85,7 +93,10 @@ describe('PaymentsController (e2e)', () => {
 
   it('PUT /payments/:id substitui pagamento', async () => {
     const payment = await createPayment();
-    const replacePayload = buildPaymentPayload({ status: PaymentStatusEnum.REJECTED, amount: 1750 });
+    const replacePayload = buildPaymentPayload({
+      status: PaymentStatusEnum.REJECTED,
+      amount: 1750,
+    });
 
     const response = await request(app.getHttpServer())
       .put(`/payments/${payment.paymentId}`)
@@ -109,7 +120,9 @@ describe('PaymentsController (e2e)', () => {
       .send({ version: payment.version })
       .expect(200);
 
-    const response = await request(app.getHttpServer()).get('/payments').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/payments')
+      .expect(200);
     expect(response.body.total).toBe(0);
   });
 });

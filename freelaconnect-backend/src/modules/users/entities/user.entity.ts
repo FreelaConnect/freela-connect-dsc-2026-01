@@ -25,7 +25,11 @@ export class UserEntity {
   @Column({ name: 'password_reset_token_hash', nullable: true })
   passwordResetTokenHash: string | null = null;
 
-  @Column({ name: 'password_reset_token_expires_at', type: 'timestamp', nullable: true })
+  @Column({
+    name: 'password_reset_token_expires_at',
+    type: 'timestamp',
+    nullable: true,
+  })
   passwordResetTokenExpiresAt: Date | null = null;
 
   @Column({

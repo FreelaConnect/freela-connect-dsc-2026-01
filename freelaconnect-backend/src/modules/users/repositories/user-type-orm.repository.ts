@@ -24,7 +24,9 @@ export class UserTypeOrmRepository implements UsersRepository {
     });
   }
 
-  async findByPasswordResetTokenHash(passwordResetTokenHash: string): Promise<UserEntity | null> {
+  async findByPasswordResetTokenHash(
+    passwordResetTokenHash: string,
+  ): Promise<UserEntity | null> {
     return this.userRepository.findOne({
       where: { passwordResetTokenHash, deletedAt: IsNull() },
     });
@@ -50,7 +52,10 @@ export class UserTypeOrmRepository implements UsersRepository {
     return this.userRepository.save(user);
   }
 
-  async update(userId: number, userData: Partial<UserEntity>): Promise<UserEntity | null> {
+  async update(
+    userId: number,
+    userData: Partial<UserEntity>,
+  ): Promise<UserEntity | null> {
     const user = await this.findById(userId);
     if (!user) {
       return null;
@@ -58,7 +63,11 @@ export class UserTypeOrmRepository implements UsersRepository {
 
     const clientVersion = userData.version;
     if (clientVersion !== undefined && clientVersion !== user.version) {
-      throw new UserVersionConflictException(userId, clientVersion, user.version);
+      throw new UserVersionConflictException(
+        userId,
+        clientVersion,
+        user.version,
+      );
     }
 
     Object.assign(user, userData);

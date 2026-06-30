@@ -37,7 +37,9 @@ describe('ContractsController (e2e)', () => {
   it('/contracts (GET) - should return paginated contracts', async () => {
     await createContract();
 
-    const response = await request(app.getHttpServer()).get('/contracts').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/contracts')
+      .expect(200);
 
     expect(response.body).toHaveProperty('data');
     expect(response.body).toHaveProperty('page');
@@ -48,9 +50,18 @@ describe('ContractsController (e2e)', () => {
   });
 
   it('/contracts (GET) - should support pagination parameters', async () => {
-    await Promise.all([createContract(), createContract(), createContract(), createContract(), createContract(), createContract()]);
+    await Promise.all([
+      createContract(),
+      createContract(),
+      createContract(),
+      createContract(),
+      createContract(),
+      createContract(),
+    ]);
 
-    const response = await request(app.getHttpServer()).get('/contracts?page=1&limit=5').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/contracts?page=1&limit=5')
+      .expect(200);
 
     expect(response.body.page).toBe(1);
     expect(response.body.limit).toBe(5);
@@ -60,7 +71,10 @@ describe('ContractsController (e2e)', () => {
   it('POST /contracts cria contrato', async () => {
     const payload = buildContractPayload();
 
-    const response = await request(app.getHttpServer()).post('/contracts').send(payload).expect(201);
+    const response = await request(app.getHttpServer())
+      .post('/contracts')
+      .send(payload)
+      .expect(201);
 
     expect(response.body).toMatchObject({
       freelancerId: payload.freelancerId,
@@ -98,7 +112,9 @@ describe('ContractsController (e2e)', () => {
 
   it('PUT /contracts/:id substitui dados', async () => {
     const contract = await createContract();
-    const replacePayload = buildContractPayload({ status: PaymentStatusEnum.REJECTED });
+    const replacePayload = buildContractPayload({
+      status: PaymentStatusEnum.REJECTED,
+    });
 
     const response = await request(app.getHttpServer())
       .put(`/contracts/${contract.contractId}`)
@@ -136,7 +152,9 @@ describe('ContractsController (e2e)', () => {
       .send({ version: contract.version })
       .expect(200);
 
-    const response = await request(app.getHttpServer()).get('/contracts').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/contracts')
+      .expect(200);
     expect(response.body.total).toBe(0);
   });
 });

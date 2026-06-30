@@ -37,7 +37,10 @@ export class UsersController {
 
   @Post()
   @ApiOperation({ summary: 'Cria um novo usuario' })
-  @ApiCreatedResponse({ description: 'Usuario criado com sucesso.', type: UserResponseDto })
+  @ApiCreatedResponse({
+    description: 'Usuario criado com sucesso.',
+    type: UserResponseDto,
+  })
   @HttpCode(HttpStatus.CREATED)
   async createUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
@@ -47,7 +50,10 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Lista usuarios com paginacao' })
-  @ApiOkResponse({ description: 'Usuarios retornados com sucesso.', type: PaginatedUserResponseDto })
+  @ApiOkResponse({
+    description: 'Usuarios retornados com sucesso.',
+    type: PaginatedUserResponseDto,
+  })
   @HttpCode(HttpStatus.OK)
   async getAllUsers(
     @Query(ValidationPipe) paginationDto: PaginationDto,
@@ -60,7 +66,10 @@ export class UsersController {
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza parcialmente um usuario' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiOkResponse({ description: 'Usuario atualizado com sucesso.', type: UserResponseDto })
+  @ApiOkResponse({
+    description: 'Usuario atualizado com sucesso.',
+    type: UserResponseDto,
+  })
   @ApiNotFoundResponse({ description: 'Usuario nao encontrado.' })
   @HttpCode(HttpStatus.OK)
   async updateUser(
@@ -73,7 +82,10 @@ export class UsersController {
   @Put(':id')
   @ApiOperation({ summary: 'Substitui os dados de um usuario' })
   @ApiParam({ name: 'id', example: 1 })
-  @ApiOkResponse({ description: 'Usuario substituido com sucesso.', type: UserResponseDto })
+  @ApiOkResponse({
+    description: 'Usuario substituido com sucesso.',
+    type: UserResponseDto,
+  })
   @ApiNotFoundResponse({ description: 'Usuario nao encontrado.' })
   @HttpCode(HttpStatus.OK)
   async replaceUser(

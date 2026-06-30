@@ -1,7 +1,10 @@
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { PasswordService } from '../../users/services/password.service';
-import { USERS_REPOSITORY, UsersRepository } from '../../users/repositories/users.repository.interface';
+import {
+  USERS_REPOSITORY,
+  UsersRepository,
+} from '../../users/repositories/users.repository.interface';
 import { UserEntity } from '../../users/entities/user.entity';
 import { UserRole } from '../../users/enums/user-role.enum';
 import { UserStatus } from '../../users/enums/user-status.enum';
@@ -92,7 +95,9 @@ describe('AuthService', () => {
   });
 
   it('rejects inactive users', async () => {
-    repository.findByEmail.mockResolvedValue(createUser({ status: UserStatus.INACTIVE }));
+    repository.findByEmail.mockResolvedValue(
+      createUser({ status: UserStatus.INACTIVE }),
+    );
 
     await expect(
       service.login({ email: demoEmail, password: demoPassword }),
@@ -158,7 +163,10 @@ describe('AuthService', () => {
     repository.findByPasswordResetTokenHash.mockResolvedValue(null);
 
     await expect(
-      service.resetPassword({ token: 'invalid-token', password: 'new-password' }),
+      service.resetPassword({
+        token: 'invalid-token',
+        password: 'new-password',
+      }),
     ).rejects.toThrow(BadRequestException);
   });
 });

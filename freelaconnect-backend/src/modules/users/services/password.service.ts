@@ -13,7 +13,10 @@ export class PasswordService {
     return `${salt}:${hash.toString('hex')}`;
   }
 
-  async comparePassword(password: string, passwordHash: string): Promise<boolean> {
+  async comparePassword(
+    password: string,
+    passwordHash: string,
+  ): Promise<boolean> {
     const [salt, storedHash] = passwordHash.split(':');
     if (!salt || !storedHash) {
       return false;

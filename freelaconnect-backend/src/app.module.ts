@@ -27,10 +27,15 @@ import { PaymentModule } from './modules/payments/payment.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        synchronize: true,
+        synchronize:
+          configService.get<string>('TYPEORM_SYNCHRONIZE') === 'true',
         entities: [ContractEntity, PaymentEntity, ProposalEntity, UserEntity],
-        logging: configService.get<string>('NODE_ENV') === 'test' ? false : ['error', 'warn'],
-        retryAttempts: configService.get<string>('NODE_ENV') === 'test' ? 0 : 10,
+        logging:
+          configService.get<string>('NODE_ENV') === 'test'
+            ? false
+            : ['error', 'warn'],
+        retryAttempts:
+          configService.get<string>('NODE_ENV') === 'test' ? 0 : 10,
       }),
     }),
     ProposalModule,

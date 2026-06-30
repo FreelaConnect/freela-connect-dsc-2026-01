@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { PaginatedUserResponseDto } from '../dto/paginated-user-response.dto';
 import { ReplaceUserDto } from '../dto/replace-user.dto';
@@ -19,22 +24,31 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const existingUser = await this.usersRepository.findByEmail(createUserDto.email);
+    const existingUser = await this.usersRepository.findByEmail(
+      createUserDto.email,
+    );
     if (existingUser) {
-      throw new ConflictException(`Usuario com email ${createUserDto.email} ja existe`);
+      throw new ConflictException(
+        `Usuario com email ${createUserDto.email} ja existe`,
+      );
     }
 
     const user = new UserEntity();
     user.name = createUserDto.name;
     user.email = createUserDto.email;
-    user.passwordHash = await this.passwordService.hashPassword(createUserDto.password);
+    user.passwordHash = await this.passwordService.hashPassword(
+      createUserDto.password,
+    );
     user.role = createUserDto.role || UserRole.USER;
 
     const savedUser = await this.usersRepository.save(user);
     return this.toResponseDto(savedUser);
   }
 
-  async getAllUsers(page: number = 1, limit: number = 10): Promise<PaginatedUserResponseDto> {
+  async getAllUsers(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedUserResponseDto> {
     const { data, total } = await this.usersRepository.findAll(page, limit);
 
     return new PaginatedUserResponseDto({
@@ -55,62 +69,87 @@ export class UsersService {
     return this.toResponseDto(user);
   }
 
-  async updateUser(userId: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
     const user = await this.usersRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`Usuario com ID ${userId} nao encontrado`);
     }
 
     if (updateUserDto.email && updateUserDto.email !== user.email) {
-      const userWithEmail = await this.usersRepository.findByEmail(updateUserDto.email);
+      const userWithEmail = await this.usersRepository.findByEmail(
+        updateUserDto.email,
+      );
       if (userWithEmail && userWithEmail.userId !== userId) {
-        throw new ConflictException(`Usuario com email ${updateUserDto.email} ja existe`);
+        throw new ConflictException(
+          `Usuario com email ${updateUserDto.email} ja existe`,
+        );
       }
     }
 
     const updateData: Partial<UserEntity> = { ...updateUserDto };
     if (updateUserDto.password) {
-      updateData.passwordHash = await this.passwordService.hashPassword(updateUserDto.password);
+      updateData.passwordHash = await this.passwordService.hashPassword(
+        updateUserDto.password,
+      );
     }
     delete (updateData as { password?: string }).password;
 
     const updatedUser = await this.usersRepository.update(userId, updateData);
     if (!updatedUser) {
-      throw new NotFoundException(`Falha ao atualizar usuario com ID ${userId}`);
+      throw new NotFoundException(
+        `Falha ao atualizar usuario com ID ${userId}`,
+      );
     }
 
     return this.toResponseDto(updatedUser);
   }
 
-  async replaceUser(userId: number, replaceUserDto: ReplaceUserDto): Promise<UserResponseDto> {
+  async replaceUser(
+    userId: number,
+    replaceUserDto: ReplaceUserDto,
+  ): Promise<UserResponseDto> {
     const user = await this.usersRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`Usuario com ID ${userId} nao encontrado`);
     }
 
     if (replaceUserDto.email !== user.email) {
-      const userWithEmail = await this.usersRepository.findByEmail(replaceUserDto.email);
+      const userWithEmail = await this.usersRepository.findByEmail(
+        replaceUserDto.email,
+      );
       if (userWithEmail && userWithEmail.userId !== userId) {
-        throw new ConflictException(`Usuario com email ${replaceUserDto.email} ja existe`);
+        throw new ConflictException(
+          `Usuario com email ${replaceUserDto.email} ja existe`,
+        );
       }
     }
 
     const replacedUser = await this.usersRepository.update(userId, {
       name: replaceUserDto.name,
       email: replaceUserDto.email,
-      passwordHash: await this.passwordService.hashPassword(replaceUserDto.password),
+      passwordHash: await this.passwordService.hashPassword(
+        replaceUserDto.password,
+      ),
       role: replaceUserDto.role,
       status: replaceUserDto.status,
       version: replaceUserDto.version,
     });
     if (!replacedUser) {
-      throw new NotFoundException(`Falha ao substituir usuario com ID ${userId}`);
+      throw new NotFoundException(
+        `Falha ao substituir usuario com ID ${userId}`,
+      );
     }
 
     return this.toResponseDto(replacedUser);
   }
 
-  async deleteUser(userId: number, version?: number): Promise<{ message: string }> {
+  async deleteUser(
+    userId: number,
+    version?: number,
+  ): Promise<{ message: string }> {
     const user = await this.usersRepository.findById(userId);
     if (!user) {
       throw new NotFoundException(`Usuario com ID ${userId} nao encontrado`);

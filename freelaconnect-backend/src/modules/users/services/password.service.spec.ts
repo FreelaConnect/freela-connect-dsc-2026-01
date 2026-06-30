@@ -17,12 +17,16 @@ describe('PasswordService', () => {
   it('matches valid passwords against their hashes', async () => {
     const hash = await service.hashPassword('password123');
 
-    await expect(service.comparePassword('password123', hash)).resolves.toBe(true);
+    await expect(service.comparePassword('password123', hash)).resolves.toBe(
+      true,
+    );
   });
 
   it('rejects invalid passwords against their hashes', async () => {
     const hash = await service.hashPassword('password123');
 
-    await expect(service.comparePassword('wrong-password', hash)).resolves.toBe(false);
+    await expect(service.comparePassword('wrong-password', hash)).resolves.toBe(
+      false,
+    );
   });
 });

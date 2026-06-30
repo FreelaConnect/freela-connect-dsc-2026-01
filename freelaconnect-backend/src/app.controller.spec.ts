@@ -19,4 +19,14 @@ describe('AppController', () => {
       expect(appController.getHello()).toBe('Hello World!');
     });
   });
+
+  describe('health', () => {
+    it('should return service health status', () => {
+      expect(appController.getHealth()).toEqual({
+        status: 'ok',
+        service: 'freelaconnect-backend',
+        timestamp: expect.any(String) as string,
+      });
+    });
+  });
 });

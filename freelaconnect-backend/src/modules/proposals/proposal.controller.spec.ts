@@ -59,7 +59,9 @@ describe('ProposalController (Integration Tests)', () => {
         updatedAt: new Date(),
       };
 
-      (proposalService.submitProposal as jest.Mock).mockResolvedValue(responseDto);
+      (proposalService.submitProposal as jest.Mock).mockResolvedValue(
+        responseDto,
+      );
 
       const response = await request(app.getHttpServer())
         .post('/proposals/submit')
@@ -68,7 +70,9 @@ describe('ProposalController (Integration Tests)', () => {
 
       expect(response.body.proposalId).toBe(responseDto.proposalId);
       expect(response.body.status).toBe(ProposalStatus.PENDING);
-      expect(proposalService.submitProposal).toHaveBeenCalledWith(createProposalDto);
+      expect(proposalService.submitProposal).toHaveBeenCalledWith(
+        createProposalDto,
+      );
     });
 
     it('should return 400 if required fields are missing', async () => {
@@ -78,7 +82,10 @@ describe('ProposalController (Integration Tests)', () => {
         // Missing freelancerId, proposedValue, estimatedDeadline
       };
 
-      await request(app.getHttpServer()).post('/proposals/submit').send(invalidDto).expect(400);
+      await request(app.getHttpServer())
+        .post('/proposals/submit')
+        .send(invalidDto)
+        .expect(400);
     });
 
     it('should return 400 if proposedValue is not positive', async () => {
@@ -90,7 +97,10 @@ describe('ProposalController (Integration Tests)', () => {
         estimatedDeadline: '15 days',
       };
 
-      await request(app.getHttpServer()).post('/proposals/submit').send(invalidDto).expect(400);
+      await request(app.getHttpServer())
+        .post('/proposals/submit')
+        .send(invalidDto)
+        .expect(400);
     });
   });
 
@@ -109,7 +119,9 @@ describe('ProposalController (Integration Tests)', () => {
         updatedAt: new Date(),
       };
 
-      (proposalService.getProposalById as jest.Mock).mockResolvedValue(responseDto);
+      (proposalService.getProposalById as jest.Mock).mockResolvedValue(
+        responseDto,
+      );
 
       const response = await request(app.getHttpServer())
         .get(`/proposals/${proposalId}`)
@@ -148,7 +160,9 @@ describe('ProposalController (Integration Tests)', () => {
         },
       ];
 
-      (proposalService.getProposalsByProjectId as jest.Mock).mockResolvedValue(responseDtos);
+      (proposalService.getProposalsByProjectId as jest.Mock).mockResolvedValue(
+        responseDtos,
+      );
 
       const response = await request(app.getHttpServer())
         .get(`/proposals/project/${projectId}`)
@@ -156,13 +170,17 @@ describe('ProposalController (Integration Tests)', () => {
 
       expect(response.body).toHaveLength(2);
       expect(response.body[0].proposalId).toBe('proposal-1');
-      expect(proposalService.getProposalsByProjectId).toHaveBeenCalledWith(projectId);
+      expect(proposalService.getProposalsByProjectId).toHaveBeenCalledWith(
+        projectId,
+      );
     });
 
     it('should return empty array if no proposals found', async () => {
       const projectId = 'project-no-proposals';
 
-      (proposalService.getProposalsByProjectId as jest.Mock).mockResolvedValue([]);
+      (proposalService.getProposalsByProjectId as jest.Mock).mockResolvedValue(
+        [],
+      );
 
       const response = await request(app.getHttpServer())
         .get(`/proposals/project/${projectId}`)

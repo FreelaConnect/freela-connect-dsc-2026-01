@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { createHash, randomBytes } from 'crypto';
 import { UserResponseDto } from '../../users/dto/user-response.dto';
 import { UserEntity } from '../../users/entities/user.entity';
@@ -62,7 +67,9 @@ export class AuthService {
   async forgotPassword(
     forgotPasswordDto: ForgotPasswordDto,
   ): Promise<PasswordRecoveryResponseDto> {
-    const user = await this.usersRepository.findByEmail(forgotPasswordDto.email);
+    const user = await this.usersRepository.findByEmail(
+      forgotPasswordDto.email,
+    );
     if (!user || user.status !== UserStatus.ACTIVE) {
       return new PasswordRecoveryResponseDto(PASSWORD_RECOVERY_MESSAGE);
     }
@@ -70,7 +77,9 @@ export class AuthService {
     const resetToken = randomBytes(32).toString('hex');
     await this.usersRepository.update(user.userId, {
       passwordResetTokenHash: this.hashResetToken(resetToken),
-      passwordResetTokenExpiresAt: new Date(Date.now() + PASSWORD_RESET_TOKEN_TTL_MS),
+      passwordResetTokenExpiresAt: new Date(
+        Date.now() + PASSWORD_RESET_TOKEN_TTL_MS,
+      ),
     });
 
     return new PasswordRecoveryResponseDto(
@@ -79,7 +88,9 @@ export class AuthService {
     );
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ message: string }> {
     const user = await this.usersRepository.findByPasswordResetTokenHash(
       this.hashResetToken(resetPasswordDto.token),
     );
@@ -89,11 +100,15 @@ export class AuthService {
       !user.passwordResetTokenExpiresAt ||
       user.passwordResetTokenExpiresAt.getTime() < Date.now()
     ) {
-      throw new BadRequestException('Token de recuperacao invalido ou expirado');
+      throw new BadRequestException(
+        'Token de recuperacao invalido ou expirado',
+      );
     }
 
     await this.usersRepository.update(user.userId, {
-      passwordHash: await this.passwordService.hashPassword(resetPasswordDto.password),
+      passwordHash: await this.passwordService.hashPassword(
+        resetPasswordDto.password,
+      ),
       passwordResetTokenHash: null,
       passwordResetTokenExpiresAt: null,
     });

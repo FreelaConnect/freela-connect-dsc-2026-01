@@ -8,7 +8,9 @@ export class ProposalResponseDto {
   projectId: string;
   @ApiProperty({ example: 'freelancer-123' })
   freelancerId: string;
-  @ApiProperty({ example: 'Tenho experiencia com NestJS e posso entregar em duas semanas.' })
+  @ApiProperty({
+    example: 'Tenho experiencia com NestJS e posso entregar em duas semanas.',
+  })
   coverLetter: string;
   @ApiProperty({ example: 2500 })
   proposedValue: number;

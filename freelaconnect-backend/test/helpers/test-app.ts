@@ -49,7 +49,9 @@ export async function createTestingModule(): Promise<TestingModule> {
   return moduleRef;
 }
 
-export async function clearDatabase(moduleRef: TestingModule | INestApplication): Promise<void> {
+export async function clearDatabase(
+  moduleRef: TestingModule | INestApplication,
+): Promise<void> {
   assertSafeTestDatabase();
 
   const dataSource = moduleRef.get(DataSource);
@@ -73,15 +75,19 @@ function setupTestEnvironment(): void {
   process.env.DB_PORT = process.env.TEST_DB_PORT || '5434';
   process.env.DB_USERNAME = process.env.TEST_DB_USERNAME || 'freelaconnect';
   process.env.DB_PASSWORD = process.env.TEST_DB_PASSWORD || 'freelaconnect';
-  process.env.DB_DATABASE = process.env.TEST_DB_DATABASE || 'freelaconnect_test';
-  process.env.JWT_SECRET = process.env.JWT_SECRET || 'freelaconnect-test-secret';
+  process.env.DB_DATABASE =
+    process.env.TEST_DB_DATABASE || 'freelaconnect_test';
+  process.env.JWT_SECRET =
+    process.env.JWT_SECRET || 'freelaconnect-test-secret';
 }
 
 export function uniqueId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export function buildUserPayload(overrides: Partial<CreateUserDto> = {}): CreateUserDto {
+export function buildUserPayload(
+  overrides: Partial<CreateUserDto> = {},
+): CreateUserDto {
   const id = uniqueId('user');
   return {
     name: 'Test User',
@@ -119,7 +125,9 @@ export function buildProposalPayload(
   };
 }
 
-export function buildPaymentPayload(overrides: Partial<CreatePaymentDto> = {}): CreatePaymentDto {
+export function buildPaymentPayload(
+  overrides: Partial<CreatePaymentDto> = {},
+): CreatePaymentDto {
   return {
     ordemId: uniqueId('order'),
     amount: 1500,
@@ -134,7 +142,10 @@ export async function registerAndLogin(
 ): Promise<{ accessToken: string; user: any; credentials: CreateUserDto }> {
   const credentials = buildUserPayload(overrides);
 
-  await request(app.getHttpServer()).post('/users').send(credentials).expect(201);
+  await request(app.getHttpServer())
+    .post('/users')
+    .send(credentials)
+    .expect(201);
   const loginResponse = await request(app.getHttpServer())
     .post('/auth/login')
     .send({

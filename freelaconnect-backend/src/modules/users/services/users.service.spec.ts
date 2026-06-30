@@ -1,6 +1,9 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { USERS_REPOSITORY, UsersRepository } from '../repositories/users.repository.interface';
+import {
+  USERS_REPOSITORY,
+  UsersRepository,
+} from '../repositories/users.repository.interface';
 import { UserEntity } from '../entities/user.entity';
 import { UserRole } from '../enums/user-role.enum';
 import { UserStatus } from '../enums/user-status.enum';
@@ -62,7 +65,9 @@ describe('UsersService', () => {
   it('creates users and never exposes password hash', async () => {
     repository.findByEmail.mockResolvedValue(null);
     passwordService.hashPassword.mockResolvedValue('hashed-password123');
-    repository.save.mockResolvedValue(createUser({ passwordHash: 'hashed-password123' }));
+    repository.save.mockResolvedValue(
+      createUser({ passwordHash: 'hashed-password123' }),
+    );
 
     const response = await service.createUser({
       name: 'Ana Cliente',
@@ -120,10 +125,16 @@ describe('UsersService', () => {
   it('updates users when they exist', async () => {
     repository.findById.mockResolvedValue(createUser());
     passwordService.hashPassword.mockResolvedValue('hashed-new-password');
-    repository.update.mockResolvedValue(createUser({ name: 'Ana Atualizada', version: 2 }));
+    repository.update.mockResolvedValue(
+      createUser({ name: 'Ana Atualizada', version: 2 }),
+    );
 
     await expect(
-      service.updateUser(1, { name: 'Ana Atualizada', password: 'new-password', version: 1 }),
+      service.updateUser(1, {
+        name: 'Ana Atualizada',
+        password: 'new-password',
+        version: 1,
+      }),
     ).resolves.toMatchObject({
       name: 'Ana Atualizada',
       version: 2,
@@ -138,7 +149,12 @@ describe('UsersService', () => {
     repository.findById.mockResolvedValue(createUser());
     passwordService.hashPassword.mockResolvedValue('hashed-password123');
     repository.update.mockResolvedValue(
-      createUser({ name: 'Ana Admin', role: UserRole.ADMIN, status: UserStatus.ACTIVE, version: 2 }),
+      createUser({
+        name: 'Ana Admin',
+        role: UserRole.ADMIN,
+        status: UserStatus.ACTIVE,
+        version: 2,
+      }),
     );
 
     await expect(

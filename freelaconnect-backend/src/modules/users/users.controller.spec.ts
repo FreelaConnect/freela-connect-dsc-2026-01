@@ -66,16 +66,26 @@ describe('UsersController', () => {
   });
 
   it('updates users', async () => {
-    service.updateUser.mockResolvedValue({ ...userResponse, name: 'Ana Atualizada', version: 2 });
+    service.updateUser.mockResolvedValue({
+      ...userResponse,
+      name: 'Ana Atualizada',
+      version: 2,
+    });
 
-    await expect(controller.updateUser('1', { name: 'Ana Atualizada', version: 1 })).resolves.toMatchObject({
+    await expect(
+      controller.updateUser('1', { name: 'Ana Atualizada', version: 1 }),
+    ).resolves.toMatchObject({
       name: 'Ana Atualizada',
       version: 2,
     });
   });
 
   it('replaces users', async () => {
-    service.replaceUser.mockResolvedValue({ ...userResponse, role: UserRole.ADMIN, version: 2 });
+    service.replaceUser.mockResolvedValue({
+      ...userResponse,
+      role: UserRole.ADMIN,
+      version: 2,
+    });
 
     await expect(
       controller.replaceUser('1', {
@@ -93,7 +103,9 @@ describe('UsersController', () => {
   });
 
   it('deletes users', async () => {
-    service.deleteUser.mockResolvedValue({ message: 'Usuario 1 deletado com sucesso' });
+    service.deleteUser.mockResolvedValue({
+      message: 'Usuario 1 deletado com sucesso',
+    });
 
     await expect(controller.deleteUser('1', { version: 1 })).resolves.toEqual({
       message: 'Usuario 1 deletado com sucesso',

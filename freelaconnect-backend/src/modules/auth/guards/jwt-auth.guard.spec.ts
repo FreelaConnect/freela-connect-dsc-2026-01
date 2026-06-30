@@ -17,7 +17,9 @@ describe('JwtAuthGuard', () => {
   it('rejects requests without bearer token', () => {
     const guard = new JwtAuthGuard(new JwtService('test-secret', 3600));
 
-    expect(() => guard.canActivate(createContext({ headers: {} }))).toThrow(UnauthorizedException);
+    expect(() => guard.canActivate(createContext({ headers: {} }))).toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('rejects requests with an invalid bearer token', () => {
@@ -32,8 +34,15 @@ describe('JwtAuthGuard', () => {
 
   it('attaches the authenticated user to valid requests', () => {
     const jwtService = new JwtService('test-secret', 3600);
-    const token = jwtService.sign({ sub: 1, email: demoEmail, role: UserRole.ADMIN });
-    const request: { headers: { authorization: string }; user?: Record<string, unknown> } = {
+    const token = jwtService.sign({
+      sub: 1,
+      email: demoEmail,
+      role: UserRole.ADMIN,
+    });
+    const request: {
+      headers: { authorization: string };
+      user?: Record<string, unknown>;
+    } = {
       headers: { authorization: `Bearer ${token}` },
     };
     const guard = new JwtAuthGuard(jwtService);

@@ -42,6 +42,8 @@ describe('RolesGuard', () => {
     } as unknown as Reflector;
     const guard = new RolesGuard(reflector);
 
-    expect(() => guard.canActivate(context({ role: UserRole.CLIENT }))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(context({ role: UserRole.CLIENT }))).toThrow(
+      ForbiddenException,
+    );
   });
 });

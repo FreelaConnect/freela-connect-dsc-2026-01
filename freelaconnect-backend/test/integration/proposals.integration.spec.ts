@@ -43,11 +43,15 @@ describe('ProposalService integration', () => {
     const payload = buildProposalPayload();
     const created = await proposalService.submitProposal(payload);
 
-    await expect(proposalService.getProposalById(created.proposalId)).resolves.toMatchObject({
+    await expect(
+      proposalService.getProposalById(created.proposalId),
+    ).resolves.toMatchObject({
       proposalId: created.proposalId,
       projectId: payload.projectId,
     });
-    await expect(proposalService.getProposalsByProjectId(payload.projectId)).resolves.toEqual([
+    await expect(
+      proposalService.getProposalsByProjectId(payload.projectId),
+    ).resolves.toEqual([
       expect.objectContaining({ proposalId: created.proposalId }),
     ]);
   });
@@ -56,7 +60,9 @@ describe('ProposalService integration', () => {
     const payload = buildProposalPayload();
     await proposalService.submitProposal(payload);
 
-    await expect(proposalService.submitProposal(payload)).rejects.toThrow(BadRequestException);
+    await expect(proposalService.submitProposal(payload)).rejects.toThrow(
+      BadRequestException,
+    );
   });
 
   it('cobre erro de projeto vazio', async () => {
@@ -67,13 +73,15 @@ describe('ProposalService integration', () => {
 
   it('cobre erro de freelancer vazio', async () => {
     await expect(
-      proposalService.submitProposal(buildProposalPayload({ freelancerId: '' })),
+      proposalService.submitProposal(
+        buildProposalPayload({ freelancerId: '' }),
+      ),
     ).rejects.toThrow(BadRequestException);
   });
 
   it('cobre erro de proposta inexistente', async () => {
-    await expect(proposalService.getProposalById('missing-proposal')).rejects.toThrow(
-      NotFoundException,
-    );
+    await expect(
+      proposalService.getProposalById('missing-proposal'),
+    ).rejects.toThrow(NotFoundException);
   });
 });

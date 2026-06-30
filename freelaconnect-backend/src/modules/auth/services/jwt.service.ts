@@ -1,4 +1,9 @@
-import { Inject, Injectable, Optional, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Optional,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { UserRole } from '../../users/enums/user-role.enum';
 
@@ -18,8 +23,10 @@ export class JwtService {
     @Optional() @Inject('JWT_SECRET') secret?: string,
     @Optional() @Inject('JWT_EXPIRES_IN_SECONDS') expiresInSeconds?: number,
   ) {
-    this.secret = secret || process.env.JWT_SECRET || 'freelaconnect-dev-secret';
-    this.expiresInSeconds = expiresInSeconds ?? Number(process.env.JWT_EXPIRES_IN_SECONDS || 3600);
+    this.secret =
+      secret || process.env.JWT_SECRET || 'freelaconnect-dev-secret';
+    this.expiresInSeconds =
+      expiresInSeconds ?? Number(process.env.JWT_EXPIRES_IN_SECONDS || 3600);
   }
 
   sign(payload: Omit<JwtPayload, 'exp'>): string {
@@ -50,7 +57,9 @@ export class JwtService {
       throw new UnauthorizedException('Token invalido');
     }
 
-    const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as JwtPayload;
+    const payload = JSON.parse(
+      Buffer.from(body, 'base64url').toString('utf8'),
+    ) as JwtPayload;
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
       throw new UnauthorizedException('Token expirado');
     }
@@ -59,7 +68,9 @@ export class JwtService {
   }
 
   private signParts(header: string, body: string): string {
-    return createHmac('sha256', this.secret).update(`${header}.${body}`).digest('base64url');
+    return createHmac('sha256', this.secret)
+      .update(`${header}.${body}`)
+      .digest('base64url');
   }
 
   private encode(value: Record<string, unknown>): string {

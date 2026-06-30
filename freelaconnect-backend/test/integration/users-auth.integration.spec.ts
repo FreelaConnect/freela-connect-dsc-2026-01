@@ -53,16 +53,18 @@ describe('Users/Auth integration', () => {
 
     expect(created.email).toBe(payload.email);
     expect(stored.passwordHash).not.toBe(payload.password);
-    await expect(passwordService.comparePassword(payload.password, stored.passwordHash)).resolves.toBe(
-      true,
-    );
+    await expect(
+      passwordService.comparePassword(payload.password, stored.passwordHash),
+    ).resolves.toBe(true);
   });
 
   it('UsersService impede e-mail duplicado', async () => {
     const payload = buildUserPayload();
     await usersService.createUser(payload);
 
-    await expect(usersService.createUser(payload)).rejects.toThrow(ConflictException);
+    await expect(usersService.createUser(payload)).rejects.toThrow(
+      ConflictException,
+    );
   });
 
   it('UsersService pagina usuarios', async () => {
@@ -96,10 +98,12 @@ describe('Users/Auth integration', () => {
   it('UsersService remove usuario respeitando version', async () => {
     const created = await usersService.createUser(buildUserPayload());
 
-    await expect(usersService.deleteUser(created.userId, created.version + 1)).rejects.toThrow(
-      ConflictException,
-    );
-    await expect(usersService.deleteUser(created.userId, created.version)).resolves.toEqual({
+    await expect(
+      usersService.deleteUser(created.userId, created.version + 1),
+    ).rejects.toThrow(ConflictException);
+    await expect(
+      usersService.deleteUser(created.userId, created.version),
+    ).resolves.toEqual({
       message: `Usuario ${created.userId} deletado com sucesso`,
     });
   });
@@ -133,7 +137,10 @@ describe('Users/Auth integration', () => {
 
   it('AuthService usuario inexistente retorna UnauthorizedException', async () => {
     await expect(
-      authService.login({ email: 'missing@example.com', password: 'password123' }),
+      authService.login({
+        email: 'missing@example.com',
+        password: 'password123',
+      }),
     ).rejects.toThrow(UnauthorizedException);
   });
 

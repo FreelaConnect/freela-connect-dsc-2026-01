@@ -1,11 +1,14 @@
-import { Injectable, Inject, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProposalRepository, PROPOSAL_REPOSITORY } from './proposal.repository';
 import { ProposalEntity } from './proposal.entity';
 import { ProposalStatus } from '../../common/enums/proposal-status.enum';
 import { CreateProposalDto } from './create-proposal.dto';
 import { ProposalResponseDto } from './proposal-response.dto';
-import { ProjectNotFoundException } from './project-not-found.exception';
-import { FreelancerValidationException } from './freelancer-validation.exception';
 
 @Injectable()
 export class ProposalService {
@@ -14,27 +17,39 @@ export class ProposalService {
     private readonly proposalRepository: ProposalRepository,
   ) {}
 
-  async submitProposal(createProposalDto: CreateProposalDto): Promise<ProposalResponseDto> {
-    const { projectId, freelancerId, coverLetter, proposedValue, estimatedDeadline } =
-      createProposalDto;
+  async submitProposal(
+    createProposalDto: CreateProposalDto,
+  ): Promise<ProposalResponseDto> {
+    const {
+      projectId,
+      freelancerId,
+      coverLetter,
+      proposedValue,
+      estimatedDeadline,
+    } = createProposalDto;
 
     // Validate project exists
     // TODO: Implement project service validation when ProjectModule is completed
     if (!projectId || projectId.trim() === '') {
-      throw new BadRequestException('Project ID is required and cannot be empty');
+      throw new BadRequestException(
+        'Project ID is required and cannot be empty',
+      );
     }
 
     // Validate freelancer
     // TODO: Implement freelancer service validation when UsersModule is completed
     if (!freelancerId || freelancerId.trim() === '') {
-      throw new BadRequestException('Freelancer ID is required and cannot be empty');
+      throw new BadRequestException(
+        'Freelancer ID is required and cannot be empty',
+      );
     }
 
     // Check if freelancer already submitted proposal to this project
-    const existingProposal = await this.proposalRepository.findByProjectAndFreelancer(
-      projectId,
-      freelancerId,
-    );
+    const existingProposal =
+      await this.proposalRepository.findByProjectAndFreelancer(
+        projectId,
+        freelancerId,
+      );
 
     if (existingProposal) {
       throw new BadRequestException(
@@ -93,7 +108,9 @@ export class ProposalService {
     });
   }
 
-  async getProposalsByProjectId(projectId: string): Promise<ProposalResponseDto[]> {
+  async getProposalsByProjectId(
+    projectId: string,
+  ): Promise<ProposalResponseDto[]> {
     const proposals = await this.proposalRepository.findByProjectId(projectId);
 
     return proposals.map(
