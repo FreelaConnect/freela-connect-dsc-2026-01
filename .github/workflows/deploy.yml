@@ -1,0 +1,58 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment configured in GitHub Environments
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - production
+      image_tag:
+        description: Image tag to deploy, for example latest or a commit SHA
+        required: true
+        default: latest
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy with Docker Compose over SSH
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Prepare image names
+        id: images
+        shell: bash
+        run: |
+          repository="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          echo "backend=ghcr.io/${repository}-backend:${{ inputs.image_tag }}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd "${{ secrets.DEPLOY_PATH }}"
+
+            if [ -n "${{ secrets.GHCR_TOKEN }}" ]; then
+              echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
+            fi
+
+            BACKEND_IMAGE="${{ steps.images.outputs.backend }}" \
+            docker compose -f docker-compose.prod.yml pull
+
+            BACKEND_IMAGE="${{ steps.images.outputs.backend }}" \
+            docker compose -f docker-compose.prod.yml up -d
+
+            docker compose -f docker-compose.prod.yml ps
+            curl --fail --silent --show-error "http://localhost:${BACKEND_PORT:-3002}/health"
